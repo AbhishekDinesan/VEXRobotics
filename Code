@@ -1,0 +1,152 @@
+#include "vex.h"
+using namespace vex;
+
+// User defined function(s)
+void myblockfunction_DriveForward();
+void myblockfunction_DriveReverse();
+void myblockfunction_turnRight();
+void myblockfunction_turnLeft();
+void myblockfunction_180();
+void myblockfunction_OpenClaw();
+void myblockfunction_Close_Claw();
+void myblockfunction_LowerArm();
+void myblockfunction_LiftArm();
+void myblockfunction_HoverArm();
+
+float myVariable, distance, distanceTime, distance1, distance2, dis3, dis4, dis5, dis6, dis7, dis8, BoxPos, whichCoordinate, x;
+
+float distances[8];
+
+event message1 = event();
+
+// User defined function
+void myblockfunction_DriveForward() {
+  LeftWheel.setVelocity(100.0, percent);
+  RightWheel.setVelocity(85.0, percent);
+  wait(1.0, seconds);
+  LeftWheel.spin(reverse);
+  RightWheel.spin(forward);
+  wait(distanceTime, seconds);
+  LeftWheel.stop();
+  RightWheel.stop();
+}
+
+// User defined function
+void myblockfunction_DriveReverse() {
+  LeftWheel.setVelocity(100.0, percent);
+  RightWheel.setVelocity(85.0, percent);
+  wait(1.0, seconds);
+  LeftWheel.spin(forward);
+  RightWheel.spin(reverse);
+  wait(distanceTime, seconds);
+  LeftWheel.stop();
+  RightWheel.stop();
+}
+
+// User defined function
+void myblockfunction_turnRight() {
+  LeftWheel.setVelocity(100.0, percent);
+  RightWheel.setVelocity(85.0, percent);
+  LeftWheel.spin(reverse);
+  RightWheel.spin(reverse);
+  wait(0.46, seconds);
+  LeftWheel.stop();
+  RightWheel.stop();
+}
+
+// User defined function
+void myblockfunction_turnLeft() {
+  LeftWheel.setVelocity(100.0, percent);
+  RightWheel.setVelocity(85.0, percent);
+  LeftWheel.spin(forward);
+  RightWheel.spin(forward);
+  wait(0.56, seconds);
+  LeftWheel.stop();
+  RightWheel.stop();
+}
+
+// User defined function
+void myblockfunction_180() {
+  LeftWheel.setVelocity(100.0, percent);
+  RightWheel.setVelocity(85.0, percent);
+  LeftWheel.spin(reverse);
+  RightWheel.spin(reverse);
+  wait(1.15, seconds);
+  LeftWheel.stop();
+  RightWheel.stop();
+}
+
+// User defined function
+void myblockfunction_OpenClaw() {
+  Claw.spin(reverse);
+  wait(1.0, seconds);
+  Claw.stop();
+}
+
+// User defined function
+void myblockfunction_Close_Claw() {
+  Claw.spin(forward);
+}
+
+// User defined function
+void myblockfunction_LowerArm() {
+  Arm.setVelocity(30.0, percent);
+  Arm.spin(forward);
+}
+
+// User defined function
+void myblockfunction_LiftArm() {
+  Arm.setVelocity(100.0, percent);
+  Arm.spin(reverse);
+}
+
+// User defined function
+void myblockfunction_HoverArm() {
+  Arm.setVelocity(15.0, percent);
+  Arm.spin(reverse);
+}
+
+// "when started" hat block
+int whenStarted1() {
+  myblockfunction_OpenClaw();
+  wait(0.25, seconds);
+  distances[0] = 3.0;
+  distances[1] = 1.6;
+  distances[2] = 3.85;
+  distances[3] = 1.05;
+  distances[4] = 2.35;
+  distances[5] = 5.2;
+  distances[6] = 7.4;
+  distances[7] = 0.9;// Distances (in seconds) for every singe driving movement
+  x = 0.0;
+  repeat(8) {
+    x = x + 1.0;
+    distanceTime = distances[static_cast<int>(x) - 1];
+    // Looping through each distance in list
+    myblockfunction_DriveForward();
+    wait(0.25, seconds);
+    if (x == 1.0) {
+      myblockfunction_turnRight();
+    } else if (x == 8.0) {
+      myblockfunction_turnRight();
+    } else if (x == 4.0) {
+      myblockfunction_Close_Claw();
+      wait(0.25, seconds);
+      myblockfunction_180();
+    } else if (x == 5.0) {
+      myblockfunction_turnRight();
+    } else if (x == 6.0) {
+      myblockfunction_180();
+    } else {
+      myblockfunction_turnLeft();
+    }
+    wait(0.25, seconds);
+    wait(5, msec);
+  }
+  return 0;
+}
+
+
+int main() {
+  whenStarted1();
+}
